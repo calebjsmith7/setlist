@@ -86,6 +86,10 @@ const App = () => {
   const [currentPad, setCurrentPad] = React.useState(undefined);
 
 
+
+  const listpads = [Apad, Ashpad, Bpad, Cpad, Cshpad, Dpad, Dshpad, Epad, Fpad, Fshpad, Gpad, Gshpad];
+  const tempostores = [tempostore1, tempostore2, tempostore3, tempostore4, tempostore5, tempostore6];
+  const playstore = [play1, play2, play3, play4, play5, play6];
   //UI
 
   keyvalidation = (e, key) => {
@@ -133,12 +137,25 @@ const App = () => {
 
 
   closestores = (val) => {
-    showtempostore1(false);
-    showtempostore2(false);
-    showtempostore3(false);
-    showtempostore4(false);
-    showtempostore5(false);
-    showtempostore6(false);
+
+    for (let i = 0; i < tempostores.length; i++) {
+      if (tempostores[i] === true) {
+        switch (i + 1) {
+          case 1: showtempostore1(false);
+            break;
+          case 2: showtempostore2(false);
+            break;
+          case 3: showtempostore3(false);
+            break;
+          case 4: showtempostore4(false);
+            break;
+          case 5: showtempostore5(false);
+            break;
+          case 6: showtempostore6(false);
+            break;
+        }
+      }
+    }
 
     switch (val) {
       case 1: showtempostore1(true);
@@ -252,25 +269,39 @@ const App = () => {
   }
 
   closepauses = (val) => {
-    showplay1(true);
-    showplay2(true);
-    showplay3(true);
-    showplay4(true);
-    showplay5(true);
-    showplay6(true);
+
+    for (let i = 0; i < playstore.length; i++) {
+      if (playstore[i] === false) {
+        switch (i + 1) {
+          case 1: showplay1(true);
+            break;
+          case 2: showplay2(true);
+            break;
+          case 3: showplay3(true);
+            break;
+          case 4: showplay4(true);
+            break;
+          case 5: showplay5(true);
+            break;
+          case 6: showplay6(true);
+            break;
+        }
+      }
+    }
+    
 
     switch (val) {
-      case 1: if(text3 != null){showplay1(false); playPad(text3);}
+      case 1: if (text3 != null) { showplay1(false); playPad(text3); }
         break;
-      case 2: if(text6 != null){showplay2(false); playPad(text6);}
+      case 2: if (text6 != null) { showplay2(false); playPad(text6); }
         break;
-      case 3: if(text9 != null){showplay3(false); playPad(text9);}
+      case 3: if (text9 != null) { showplay3(false); playPad(text9); }
         break;
-      case 4: if(text12 != null){showplay4(false); playPad(text12);}
+      case 4: if (text12 != null) { showplay4(false); playPad(text12); }
         break;
-      case 5: if(text15 != null){showplay5(false); playPad(text15);}
+      case 5: if (text15 != null) { showplay5(false); playPad(text15); }
         break;
-      case 6: if(text18 != null){showplay6(false); playPad(text18);}
+      case 6: if (text18 != null) { showplay6(false); playPad(text18); }
         break;
     }
   }
@@ -279,43 +310,97 @@ const App = () => {
   // Function for playing the pad sound
 
   playPad = (pad) => {
-    
-    switch(pad){
-      case 'A' || 'a': setCurrentPad(Apad); Apad.play(()=>{});
-      break;
-      case 'A#' || 'a#': setCurrentPad(Ashpad); Ashpad.play(()=>{});
-      break;
-      case 'B' || 'b': setCurrentPad(Bpad); Bpad.play(()=>{});
-      break;
-      case 'C' || 'c': setCurrentPad(Cpad); Cpad.play(()=>{});
-      break;
-      case 'C#' || 'c#': setCurrentPad(Cshpad); Cshpad.play(()=>{});
-      break;
-      case 'D' || 'd': setCurrentPad(Dpad); Dpad.play(()=>{});
-      break;
-      case 'D#' || 'd#': setCurrentPad(Dshpad); Dshpad.play(()=>{});
-      break;
-      case 'E' || 'e': setCurrentPad(Epad); Epad.play(()=>{});
-      break;
-      case 'F' || 'f': setCurrentPad(Fpad); Fpad.play(()=>{});
-      break;
-      case 'F#' || 'f#': setCurrentPad(Fshpad); Fshpad.play(()=>{});
-      break;
-      case 'G' || 'g': setCurrentPad(Gpad); Gpad.play(()=>{});
-      break;
-      case 'G#' || 'g#': setCurrentPad(Gshpad); Gshpad.play(()=>{});
-      break;
+
+    switch (pad) {
+      case 'A' || 'a': rollit(Apad);
+        break;
+      case 'A#' || 'a#': rollit(Ashpad);
+        break;
+      case 'B' || 'b': rollit(Bpad);
+        break;
+      case 'C' || 'c': rollit(Cpad);
+        break;
+      case 'C#' || 'c#': rollit(Cshpad);
+        break;
+      case 'D' || 'd': rollit(Dpad);
+        break;
+      case 'D#' || 'd#': rollit(Dshpad);
+        break;
+      case 'E' || 'e': rollit(Epad);
+        break;
+      case 'F' || 'f': rollit(Fpad);
+        break;
+      case 'F#' || 'f#': rollit(Fshpad);
+        break;
+      case 'G' || 'g': rollit(Gpad);
+        break;
+      case 'G#' || 'g#': rollit(Gshpad);
+        break;
     }
   }
 
+  // Func to fade out, or start at zero then fade in and loop
+
+  rollit = (pad) => {
+    if (currentPad != undefined) {
+      for (let i = 0; i < listpads.length; i++) {
+        listpads[i]._filename == currentPad._filename ? fadeout(listpads[i]) : null;
+      }
+      setTimeout(() => {
+        thefadein(pad);
+      }, 2500);
+
+    } else {
+
+      thefadein(pad);
+     
+    }
+  }
+
+
   // Function for pausing the pad sound
-pausePad = () => {
-  currentPad.stop();
-}
+  pausePad = () => {
+    for (let i = 0; i < listpads.length; i++) {
+      listpads[i]._filename == currentPad._filename ? fadeout(listpads[i]) : null;
+    }
+  }
+
+  fadeout = (pad) => {
+    let invl3 = setInterval(() => {
+      pad.setVolume(pad.getVolume() - .04);
+      console.log(pad.getVolume());
+    }, 100);
+
+    setTimeout(() => {
+      clearInterval(invl3);
+      pad.setVolume(0);
+      console.log(0);
+    }, 2500);
+  }
+
+  thefadein = (pad) => {
+    setCurrentPad(pad);
+
+    pad.setVolume(0);
+    pad.setNumberOfLoops(-1);
+    pad.setPan(1);
+    pad.play(() => { });
+
+    let invl4 = setInterval(() => {
+      pad.setVolume(pad.getVolume() + .04);
+      console.log(pad.getVolume());
+    }, 100);
+
+    setTimeout(() => {
+      clearInterval(invl4);
+      pad.setVolume(1);
+      console.log(1);
+    }, 2500);
+  }
   // Function for pausing and playing click sound STILL NEEDED
 
   return (
-   
+
     <SafeAreaView style={{ backgroundColor: '#1e2427', height: Dimensions.get('window').height }}>
       <View style={styles.container}>
         <Image source={logo} style={styles.header} />
@@ -324,7 +409,7 @@ pausePad = () => {
         <View style={{ width: '50%' }}>
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText1}
+            onSubmitEditing={onChangeText1}
             value={text1}
             keyboardType='default'
             keyboardAppearance='default'
@@ -361,13 +446,13 @@ pausePad = () => {
         <View style={{ width: '50%', height: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '2%', marginTop: 'auto', marginBottom: 'auto', marginLeft: '7%' }}>
           <TouchableOpacity><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => closepauses(1)}><Text style={{ color: 'black', fontSize: 40, marginBottom: 5, marginRight: 40, display: play1 ? 'flex' : 'none' }}>▶</Text></TouchableOpacity>
-          <TouchableOpacity onPress={() => { showplay1(!play1); pausePad()}} style={{ position: 'absolute', top: 15, right: 15 }}><Text style={{ color: 'black', fontSize: 40, marginRight: 40, marginBottom: 5, display: play1 ? 'none' : 'flex' }}>II</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => { showplay1(!play1); pausePad() }} style={{ position: 'absolute', top: 15, right: 15 }}><Text style={{ color: 'black', fontSize: 40, marginRight: 40, marginBottom: 5, display: play1 ? 'none' : 'flex' }}>II</Text></TouchableOpacity>
         </View>
         <View style={{ position: 'absolute', width: '103%', height: '120%', backgroundColor: '#1e2427', bottom: 0, borderColor: 'grey', borderWidth: 2, display: tempostore1 ? 'flex' : 'none' }}>
           <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 'auto', marginBottom: 'auto' }}>
             <TouchableOpacity style={{ backgroundColor: 'black', borderColor: 'grey', borderWidth: 1 }} onPress={() => changetempo(1, 1)}><Text style={{ color: 'white', fontSize: 25 }}>4/4</Text></TouchableOpacity>
             <TouchableOpacity style={{ backgroundColor: 'black', borderColor: 'grey', borderWidth: 1 }} onPress={() => changetempo(1, 2)}><Text style={{ color: 'white', fontSize: 25 }}>3/4</Text></TouchableOpacity>
-            <TouchableOpacity style={{ backgroundColor: 'black', borderColor: 'grey', borderWidth: 1 }} onPress={() => changetempo(1, 3)} ><Text style={{ color: 'white', fontSize: 25 }}>6/8</Text></TouchableOpacity>
+            <TouchableOpacity style={{ backgroundColor: 'black', borderColor: 'grey', borderWidth: 1 }} onPress={() => changetempo(1, 3)}><Text style={{ color: 'white', fontSize: 25 }}>6/8</Text></TouchableOpacity>
             <TouchableOpacity style={{ backgroundColor: 'black', borderColor: 'grey', borderWidth: 1 }} onPress={() => changetempo(1, 4)}><Text style={{ color: 'white', fontSize: 25 }}>2/4</Text></TouchableOpacity>
             <TouchableOpacity style={{ backgroundColor: 'black', borderColor: 'grey', borderWidth: 1 }} onPress={() => changetempo(1, 5)}><Text style={{ color: 'white', fontSize: 25 }}>5/4</Text></TouchableOpacity>
           </View>
@@ -377,7 +462,7 @@ pausePad = () => {
         <View style={{ width: '50%' }}>
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText4}
+            onSubmitEditing={onChangeText4}
             value={text4}
             keyboardType='default'
             keyboardAppearance='default'
@@ -414,7 +499,7 @@ pausePad = () => {
         <View style={{ width: '50%', height: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '2%', marginTop: 'auto', marginBottom: 'auto', marginLeft: '7%' }}>
           <TouchableOpacity><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => closepauses(2)}><Text style={{ color: 'black', fontSize: 40, marginBottom: 5, marginRight: 40, display: play2 ? 'flex' : 'none' }}>▶</Text></TouchableOpacity>
-          <TouchableOpacity onPress={() => { showplay2(!play2); pausePad()}} style={{ position: 'absolute', top: 15, right: 15 }}><Text style={{ color: 'black', fontSize: 40, marginRight: 40, marginBottom: 5, display: play2 ? 'none' : 'flex' }}>II</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => { showplay2(!play2); pausePad() }} style={{ position: 'absolute', top: 15, right: 15 }}><Text style={{ color: 'black', fontSize: 40, marginRight: 40, marginBottom: 5, display: play2 ? 'none' : 'flex' }}>II</Text></TouchableOpacity>
         </View>
         <View style={{ position: 'absolute', width: '103%', height: '120%', backgroundColor: '#1e2427', bottom: 0, borderColor: 'grey', borderWidth: 2, display: tempostore2 ? 'flex' : 'none' }}>
           <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 'auto', marginBottom: 'auto' }}>
@@ -430,7 +515,7 @@ pausePad = () => {
         <View style={{ width: '50%' }}>
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText7}
+            onSubmitEditing={onChangeText7}
             value={text7}
             keyboardType='default'
             keyboardAppearance='default'
@@ -483,7 +568,7 @@ pausePad = () => {
         <View style={{ width: '50%' }}>
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText10}
+            onSubmitEditing={onChangeText10}
             value={text10}
             keyboardType='default'
             keyboardAppearance='default'
@@ -520,7 +605,7 @@ pausePad = () => {
         <View style={{ width: '50%', height: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '2%', marginTop: 'auto', marginBottom: 'auto', marginLeft: '7%' }}>
           <TouchableOpacity><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => closepauses(4)}><Text style={{ color: 'black', fontSize: 40, marginBottom: 5, marginRight: 40, display: play4 ? 'flex' : 'none' }}>▶</Text></TouchableOpacity>
-          <TouchableOpacity onPress={() => { showplay4(!play4); pausePad()}} style={{ position: 'absolute', top: 15, right: 15 }}><Text style={{ color: 'black', fontSize: 40, marginRight: 40, marginBottom: 5, display: play4 ? 'none' : 'flex' }}>II</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => { showplay4(!play4); pausePad() }} style={{ position: 'absolute', top: 15, right: 15 }}><Text style={{ color: 'black', fontSize: 40, marginRight: 40, marginBottom: 5, display: play4 ? 'none' : 'flex' }}>II</Text></TouchableOpacity>
         </View>
         <View style={{ position: 'absolute', width: '103%', height: '120%', backgroundColor: '#1e2427', bottom: 0, borderColor: 'grey', borderWidth: 2, display: tempostore4 ? 'flex' : 'none' }}>
           <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 'auto', marginBottom: 'auto' }}>
@@ -536,7 +621,7 @@ pausePad = () => {
         <View style={{ width: '50%' }}>
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText13}
+            onSubmitEditing={onChangeText13}
             value={text13}
             keyboardType='default'
             keyboardAppearance='default'
@@ -573,7 +658,7 @@ pausePad = () => {
         <View style={{ width: '50%', height: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '2%', marginTop: 'auto', marginBottom: 'auto', marginLeft: '7%' }}>
           <TouchableOpacity><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => closepauses(5)}><Text style={{ color: 'black', fontSize: 40, marginBottom: 5, marginRight: 40, display: play5 ? 'flex' : 'none' }}>▶</Text></TouchableOpacity>
-          <TouchableOpacity onPress={() => { showplay5(!play5); pausePad()}} style={{ position: 'absolute', top: 15, right: 15 }}><Text style={{ color: 'black', fontSize: 40, marginRight: 40, marginBottom: 5, display: play5 ? 'none' : 'flex' }}>II</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => { showplay5(!play5); pausePad() }} style={{ position: 'absolute', top: 15, right: 15 }}><Text style={{ color: 'black', fontSize: 40, marginRight: 40, marginBottom: 5, display: play5 ? 'none' : 'flex' }}>II</Text></TouchableOpacity>
         </View>
         <View style={{ position: 'absolute', width: '103%', height: '120%', backgroundColor: '#1e2427', bottom: 0, borderColor: 'grey', borderWidth: 2, display: tempostore5 ? 'flex' : 'none' }}>
           <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 'auto', marginBottom: 'auto' }}>
@@ -589,7 +674,7 @@ pausePad = () => {
         <View style={{ width: '50%' }}>
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText16}
+            onSubmitEditing={onChangeText16}
             value={text16}
             keyboardType='default'
             keyboardAppearance='default'
@@ -639,7 +724,7 @@ pausePad = () => {
         </View>
       </View>
     </SafeAreaView>
- 
+
   );
 };
 
