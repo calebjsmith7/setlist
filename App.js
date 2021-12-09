@@ -2,7 +2,6 @@
 import React from 'react';
 import {
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -10,7 +9,6 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
-  Button
 } from 'react-native';
 import Sound from 'react-native-sound';
 
@@ -27,8 +25,8 @@ import fpad from './audio/FPad1.wav';
 import fshpad from './audio/FshPad1.wav';
 import gpad from './audio/GPad1.wav';
 import gshpad from './audio/GshPad1.wav';
-
-
+import nomehit from './audio/nome.wav';
+import _BackgroundTimer from 'react-native-background-timer';
 
 
 
@@ -84,12 +82,14 @@ const App = () => {
   const [Gpad] = React.useState(new Sound(gpad));
   const [Gshpad] = React.useState(new Sound(gshpad));
   const [currentPad, setCurrentPad] = React.useState(undefined);
+  const [nome] = React.useState(new Sound(nomehit));
+  
 
-
-
+  
   const listpads = [Apad, Ashpad, Bpad, Cpad, Cshpad, Dpad, Dshpad, Epad, Fpad, Fshpad, Gpad, Gshpad];
   const tempostores = [tempostore1, tempostore2, tempostore3, tempostore4, tempostore5, tempostore6];
   const playstore = [play1, play2, play3, play4, play5, play6];
+  let bpm = undefined;
   //UI
 
   keyvalidation = (e, key) => {
@@ -291,17 +291,17 @@ const App = () => {
     
 
     switch (val) {
-      case 1: if (text3 != null) { showplay1(false); playPad(text3); }
+      case 1: if (text3 != null) { showplay1(false); bpm=text2; playPad(text3); }
         break;
-      case 2: if (text6 != null) { showplay2(false); playPad(text6); }
+      case 2: if (text6 != null) { showplay2(false); bpm=text5; playPad(text6); }
         break;
-      case 3: if (text9 != null) { showplay3(false); playPad(text9); }
+      case 3: if (text9 != null) { showplay3(false); bpm=text8; playPad(text9); }
         break;
-      case 4: if (text12 != null) { showplay4(false); playPad(text12); }
+      case 4: if (text12 != null) { showplay4(false); bpm=text11; playPad(text12); }
         break;
-      case 5: if (text15 != null) { showplay5(false); playPad(text15); }
+      case 5: if (text15 != null) { showplay5(false); bpm=text14; playPad(text15); }
         break;
-      case 6: if (text18 != null) { showplay6(false); playPad(text18); }
+      case 6: if (text18 != null) { showplay6(false); bpm=text17; playPad(text18); }
         break;
     }
   }
@@ -366,6 +366,7 @@ const App = () => {
   }
 
   fadeout = (pad) => {
+    pauseclick();
     let invl3 = setInterval(() => {
       pad.setVolume(pad.getVolume() - .04);
       console.log(pad.getVolume());
@@ -380,7 +381,7 @@ const App = () => {
 
   thefadein = (pad) => {
     setCurrentPad(pad);
-
+   goclick();
     pad.setVolume(0);
     pad.setNumberOfLoops(-1);
     pad.setPan(1);
@@ -398,6 +399,23 @@ const App = () => {
     }, 2500);
   }
   // Function for pausing and playing click sound STILL NEEDED
+
+goclick = () => {
+  nome.setPan(-1);
+  _BackgroundTimer.runBackgroundTimer(()=>{
+    nome.stop();
+    nome.play(()=>{});
+  },(60/bpm)*1000)
+}
+
+
+pauseclick = () => {
+  _BackgroundTimer.stopBackgroundTimer();
+}
+
+
+
+
 
   return (
 
@@ -444,7 +462,7 @@ const App = () => {
           </View>
         </View>
         <View style={{ width: '50%', height: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '2%', marginTop: 'auto', marginBottom: 'auto', marginLeft: '7%' }}>
-          <TouchableOpacity><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
+          <TouchableOpacity onPress={()=> pauseclick()}><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => closepauses(1)}><Text style={{ color: 'black', fontSize: 40, marginBottom: 5, marginRight: 40, display: play1 ? 'flex' : 'none' }}>▶</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => { showplay1(!play1); pausePad() }} style={{ position: 'absolute', top: 15, right: 15 }}><Text style={{ color: 'black', fontSize: 40, marginRight: 40, marginBottom: 5, display: play1 ? 'none' : 'flex' }}>II</Text></TouchableOpacity>
         </View>
@@ -497,7 +515,7 @@ const App = () => {
           </View>
         </View>
         <View style={{ width: '50%', height: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '2%', marginTop: 'auto', marginBottom: 'auto', marginLeft: '7%' }}>
-          <TouchableOpacity><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
+          <TouchableOpacity onPress={()=> pauseclick()}><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => closepauses(2)}><Text style={{ color: 'black', fontSize: 40, marginBottom: 5, marginRight: 40, display: play2 ? 'flex' : 'none' }}>▶</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => { showplay2(!play2); pausePad() }} style={{ position: 'absolute', top: 15, right: 15 }}><Text style={{ color: 'black', fontSize: 40, marginRight: 40, marginBottom: 5, display: play2 ? 'none' : 'flex' }}>II</Text></TouchableOpacity>
         </View>
@@ -550,7 +568,7 @@ const App = () => {
           </View>
         </View>
         <View style={{ width: '50%', height: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '2%', marginTop: 'auto', marginBottom: 'auto', marginLeft: '7%' }}>
-          <TouchableOpacity><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
+          <TouchableOpacity onPress={()=> pauseclick()}><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => closepauses(3)}><Text style={{ color: 'black', fontSize: 40, marginBottom: 5, marginRight: 40, display: play3 ? 'flex' : 'none' }}>▶</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => { showplay3(!play3); pausePad() }} style={{ position: 'absolute', top: 15, right: 15 }}><Text style={{ color: 'black', fontSize: 40, marginRight: 40, marginBottom: 5, display: play3 ? 'none' : 'flex' }}>II</Text></TouchableOpacity>
         </View>
@@ -603,7 +621,7 @@ const App = () => {
           </View>
         </View>
         <View style={{ width: '50%', height: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '2%', marginTop: 'auto', marginBottom: 'auto', marginLeft: '7%' }}>
-          <TouchableOpacity><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
+          <TouchableOpacity onPress={()=> pauseclick()}><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => closepauses(4)}><Text style={{ color: 'black', fontSize: 40, marginBottom: 5, marginRight: 40, display: play4 ? 'flex' : 'none' }}>▶</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => { showplay4(!play4); pausePad() }} style={{ position: 'absolute', top: 15, right: 15 }}><Text style={{ color: 'black', fontSize: 40, marginRight: 40, marginBottom: 5, display: play4 ? 'none' : 'flex' }}>II</Text></TouchableOpacity>
         </View>
@@ -656,7 +674,7 @@ const App = () => {
           </View>
         </View>
         <View style={{ width: '50%', height: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '2%', marginTop: 'auto', marginBottom: 'auto', marginLeft: '7%' }}>
-          <TouchableOpacity><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
+          <TouchableOpacity onPress={()=> pauseclick()}><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => closepauses(5)}><Text style={{ color: 'black', fontSize: 40, marginBottom: 5, marginRight: 40, display: play5 ? 'flex' : 'none' }}>▶</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => { showplay5(!play5); pausePad() }} style={{ position: 'absolute', top: 15, right: 15 }}><Text style={{ color: 'black', fontSize: 40, marginRight: 40, marginBottom: 5, display: play5 ? 'none' : 'flex' }}>II</Text></TouchableOpacity>
         </View>
@@ -709,7 +727,7 @@ const App = () => {
           </View>
         </View>
         <View style={{ width: '50%', height: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '2%', marginTop: 'auto', marginBottom: 'auto', marginLeft: '7%' }}>
-          <TouchableOpacity><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
+          <TouchableOpacity onPress={()=> pauseclick()}><Text style={{ color: 'white', fontSize: 30, marginTop: 5, backgroundColor: '#1e2427' }}>Click</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => closepauses(6)}><Text style={{ color: 'black', fontSize: 40, marginBottom: 5, marginRight: 40, display: play6 ? 'flex' : 'none' }}>▶</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => { showplay6(!play6); pausePad() }} style={{ position: 'absolute', top: 15, right: 15 }}><Text style={{ color: 'black', fontSize: 40, marginRight: 40, marginBottom: 5, display: play6 ? 'none' : 'flex' }}>II</Text></TouchableOpacity>
         </View>
